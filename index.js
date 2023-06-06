@@ -12,7 +12,6 @@ app.use(express.json());
 
 const verifyJWT = (req, res, next) => {
   const authorization = req.headers.authorization;
-  console.log("auth", authorization);
   if (!authorization) {
     return res.status(403).send({ error: true, message: "forbidden Access" });
   }
@@ -57,7 +56,6 @@ async function run() {
     // handle JWT
     app.post("/jwt", (req, res) => {
       const user = req.body;
-      console.log(user)
       const token = jwt.sign({email: user.user.email}, process.env.ACCESS_TOKEN);
       res.send({ token });
     });
@@ -125,6 +123,15 @@ async function run() {
       res.send(result);
     });
 
+    // delete a spesific user
+    app.delete('/users/:id', async(req,res)=>{
+      const id = req.params.id 
+      const query = {_id : new ObjectId(id)}
+      const result = await usersCollection.deleteOne(query) 
+      res.send(result)
+      
+    })
+
     // menu related apis
     // --------------------------------------------------------------
 
@@ -137,7 +144,6 @@ async function run() {
     // insert a item to cart
     app.post("/cart", async (req, res) => {
       const cartBody = req.body;
-      console.log(cartBody)
       const result = await cartItems.insertOne(cartBody);
       res.send(result);
     });
@@ -145,12 +151,10 @@ async function run() {
     // get cart items
     app.get("/carts", verifyJWT, async (req, res) => {
       const email = req.query.email;
-      console.log(email)
       if (!email) {
         res.send([]);
       }
       const decodedEmail = req.decoded.email;
-     console.log(req.decoded)
       if (email !== decodedEmail) {
         return res
           .status(401).send({ error: true, message: "forbidden access" });

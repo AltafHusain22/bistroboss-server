@@ -16,6 +16,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
     "mongodb": "^5.5.0",
-    "react-simple-captcha": "^9.0.2"
+    "react-simple-captcha": "^9.0.2",
+    "stripe": "^12.8.0"
   }
 }
